@@ -1,0 +1,30 @@
+name: Workflow03
+on:   
+  push:
+    branches:
+      main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "iniciando o Workflow"
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Configurando Ambiente 
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: maven
+          
+      - name: Rodando testes e gerando jar
+        run: mvn test -B clean verify
+
+      - name: Publicar artefato
+        uses: actions/upload-artifact@v7
+        with:
+          name: calculadora-jar
+          path: target/calculadora-ci-1.0.0.jar
+          if-no-files-found: error
+      
